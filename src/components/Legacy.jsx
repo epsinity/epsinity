@@ -110,39 +110,45 @@ export default function Legacy() {
                 </linearGradient>
               </defs>
 
-              <motion.path
-                d="M110 135 C250 80 325 185 380 235 C445 295 520 390 650 330"
-                fill="none"
-                stroke="url(#legacyBridge)"
-                strokeWidth="3"
-                strokeLinecap="round"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-              />
-
-              <motion.path
-                d="M110 335 C250 390 325 285 380 235 C445 175 520 80 650 140"
-                fill="none"
-                stroke="rgba(205,221,244,0.2)"
-                strokeWidth="1.4"
-                strokeDasharray="8 10"
-                animate={{ strokeDashoffset: [0, -54] }}
-                transition={{ repeat: Infinity, duration: 5, ease: 'linear' }}
-              />
-
-              {[0, 1, 2, 3].map(i => (
-                <motion.circle
-                  key={i}
-                  cx={110 + i * 180}
-                  cy={i % 2 === 0 ? 135 + i * 34 : 335 - i * 34}
-                  r="5"
-                  fill="rgba(238,242,249,0.82)"
-                  animate={{ scale: [0.8, 1.35, 0.8], opacity: [0.35, 1, 0.35] }}
-                  transition={{ repeat: Infinity, duration: 2.6, delay: i * 0.28, ease: 'easeInOut' }}
+              {/* whole wave group floats together */}
+              <motion.g
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
+              >
+                <motion.path
+                  d="M110 135 C250 80 325 185 380 235 C445 295 520 390 650 330"
+                  fill="none"
+                  stroke="url(#legacyBridge)"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
                 />
-              ))}
+
+                <motion.path
+                  d="M110 335 C250 390 325 285 380 235 C445 175 520 80 650 140"
+                  fill="none"
+                  stroke="rgba(205,221,244,0.2)"
+                  strokeWidth="1.4"
+                  strokeDasharray="8 10"
+                  animate={{ strokeDashoffset: [0, -54] }}
+                  transition={{ repeat: Infinity, duration: 5, ease: 'linear' }}
+                />
+
+                {[0, 1, 2, 3].map(i => (
+                  <motion.circle
+                    key={i}
+                    cx={110 + i * 180}
+                    cy={i % 2 === 0 ? 135 + i * 34 : 335 - i * 34}
+                    r="5"
+                    fill="rgba(238,242,249,0.82)"
+                    animate={{ scale: [0.8, 1.35, 0.8], opacity: [0.35, 1, 0.35] }}
+                    transition={{ repeat: Infinity, duration: 2.6, delay: i * 0.28, ease: 'easeInOut' }}
+                  />
+                ))}
+              </motion.g>
             </svg>
 
             <div style={{

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 const wordVar = {
@@ -7,53 +7,72 @@ const wordVar = {
   visible: { clipPath: 'inset(-45% -22% -45% -22%)', y: '0%' },
 }
 
-/* headline word with a blue paint-splash hover */
+/* headline word with a cursor-local blue highlight */
 function HeroWord({ word, baseColor, fontWeight, fontSize, transition }) {
   const [hover, setHover] = useState(false)
+  const [pos, setPos] = useState({ x: 50, y: 50 })
+  const spanRef = useRef(null)
+
+  const handleMouseMove = (e) => {
+    const rect = spanRef.current?.getBoundingClientRect()
+    if (!rect) return
+    setPos({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100,
+    })
+  }
+
   return (
     <motion.span
+      ref={spanRef}
       variants={wordVar}
       transition={transition}
       data-hover
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onMouseMove={handleMouseMove}
       style={{
         position: 'relative', display: 'inline-block', cursor: 'none',
         fontFamily: 'var(--font-display)', fontWeight,
         fontSize, lineHeight: 0.9, letterSpacing: '0.02em', textTransform: 'uppercase',
       }}
     >
-      {/* paint splash — organic blurred blue blob */}
-      <motion.span aria-hidden
-        animate={{ opacity: hover ? 1 : 0, scale: hover ? 1 : 0.45, rotate: hover ? 0 : -12 }}
-        transition={{ type: 'spring', stiffness: 170, damping: 15 }}
+      {/* cursor-following blue blob — outer span handles position, inner handles opacity */}
+      <span aria-hidden style={{
+        position: 'absolute',
+        left: `${pos.x}%`, top: `${pos.y}%`,
+        transform: 'translate(-50%, -50%)',
+        zIndex: 0, pointerEvents: 'none',
+      }}>
+        <motion.span
+          animate={{ opacity: hover ? 1 : 0 }}
+          transition={{ duration: 0.15 }}
+          style={{
+            display: 'block',
+            width: '3.8em', height: '2.4em',
+            background: 'radial-gradient(closest-side, rgba(70,130,240,0.7), rgba(70,130,240,0.2) 55%, transparent 78%)',
+            filter: 'blur(18px)',
+            borderRadius: '50%',
+          }}
+        />
+      </span>
+      {/* text — gradient clips to cursor area only */}
+      <span
         style={{
-          position: 'absolute', left: '-14%', right: '-14%', top: '-18%', bottom: '-18%',
-          background: 'radial-gradient(closest-side, rgba(70,130,240,0.6), rgba(70,130,240,0.18) 58%, transparent 78%)',
-          filter: 'blur(16px)',
-          borderRadius: '47% 53% 64% 36% / 56% 42% 58% 44%',
-          zIndex: 0, pointerEvents: 'none',
+          position: 'relative', zIndex: 1, display: 'inline-block',
+          ...(hover ? {
+            backgroundImage: `radial-gradient(circle at ${pos.x}% ${pos.y}%, #8fbaff 0%, #8fbaff 14%, ${baseColor} 40%)`,
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            color: 'transparent',
+          } : {
+            color: baseColor,
+          }),
         }}
-      />
-      {/* secondary droplet for splatter feel */}
-      <motion.span aria-hidden
-        animate={{ opacity: hover ? 0.9 : 0, scale: hover ? 1 : 0.3 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 14, delay: hover ? 0.04 : 0 }}
-        style={{
-          position: 'absolute', right: '-2%', top: '-6%', width: '34%', height: '46%',
-          background: 'radial-gradient(closest-side, rgba(90,150,255,0.55), transparent 72%)',
-          filter: 'blur(10px)',
-          borderRadius: '60% 40% 50% 50% / 50% 55% 45% 50%',
-          zIndex: 0, pointerEvents: 'none',
-        }}
-      />
-      <motion.span
-        animate={{ color: hover ? '#8fbaff' : baseColor }}
-        transition={{ duration: 0.3 }}
-        style={{ position: 'relative', zIndex: 1, display: 'inline-block' }}
       >
         {word}
-      </motion.span>
+      </span>
     </motion.span>
   )
 }
