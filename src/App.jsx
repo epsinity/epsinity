@@ -1,3 +1,4 @@
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import Cursor from './components/Cursor'
 import Navbar from './components/Navbar'
 import Intro from './components/Intro'
@@ -20,6 +21,7 @@ export default function App() {
         <Legacy />
         <Contact />
       </main>
+      <SpeedInsights />
     </>
   )
 }
