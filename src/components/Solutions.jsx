@@ -159,7 +159,7 @@ function SolutionPanel({ sol }) {
         fontWeight: 700,
         fontSize: 'clamp(8rem, 15vw, 19rem)',
         lineHeight: 0.8,
-        color: 'rgba(200,216,240,0.04)',
+        color: 'rgba(29,60,102,0.06)',
         pointerEvents: 'none',
         userSelect: 'none',
       }}>
@@ -168,10 +168,10 @@ function SolutionPanel({ sol }) {
 
       {/* Corner brackets */}
       {[
-        { top: 0, left: 0, borderTop: '1px solid rgba(200,216,240,0.3)', borderLeft: '1px solid rgba(200,216,240,0.3)' },
-        { top: 0, right: 0, borderTop: '1px solid rgba(200,216,240,0.3)', borderRight: '1px solid rgba(200,216,240,0.3)' },
-        { bottom: 0, left: 0, borderBottom: '1px solid rgba(200,216,240,0.3)', borderLeft: '1px solid rgba(200,216,240,0.3)' },
-        { bottom: 0, right: 0, borderBottom: '1px solid rgba(200,216,240,0.3)', borderRight: '1px solid rgba(200,216,240,0.3)' },
+        { top: 0, left: 0, borderTop: '1px solid rgba(29,60,102,0.18)', borderLeft: '1px solid rgba(29,60,102,0.18)' },
+        { top: 0, right: 0, borderTop: '1px solid rgba(29,60,102,0.18)', borderRight: '1px solid rgba(29,60,102,0.18)' },
+        { bottom: 0, left: 0, borderBottom: '1px solid rgba(29,60,102,0.18)', borderLeft: '1px solid rgba(29,60,102,0.18)' },
+        { bottom: 0, right: 0, borderBottom: '1px solid rgba(29,60,102,0.18)', borderRight: '1px solid rgba(29,60,102,0.18)' },
       ].map((s, i) => (
         <div key={i} style={{ position: 'absolute', width: 16, height: 16, ...s }} />
       ))}

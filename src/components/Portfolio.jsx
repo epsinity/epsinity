@@ -1,101 +1,100 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 
-const projects = [
+// ─── ADD PROJECTS HERE ────────────────────────────────────────────────────────
+// Add an object to this array. Drop the image in /public/images/ and set imgUrl.
+// The carousel automatically includes the new card — no other changes needed.
+// ─────────────────────────────────────────────────────────────────────────────
+const PROJECTS = [
   {
-    num: '01',
+    num: '01', discipline: 'CFD',
     title: 'CFD for HVAC Optimization',
-    sector: 'Industrial',
-    discipline: 'CFD',
-    focus: 'Climate Control',
-    visual: 'radial-gradient(circle at 24% 28%, rgba(205,221,244,0.28), transparent 22%), linear-gradient(135deg, #101724 0%, #05070c 58%, #172030 100%)',
+    sector: 'Industrial', focus: 'Climate Control',
+    imgUrl: '/images/portfolio-1.jpg',
+    fallback: 'linear-gradient(135deg, #101724 0%, #05070c 58%, #172030 100%)',
   },
   {
-    num: '02',
+    num: '02', discipline: 'CFD',
     title: 'Aerospace CFD Analysis',
-    sector: 'Aerospace',
-    discipline: 'CFD',
-    focus: 'Fuel Efficiency',
-    visual: 'radial-gradient(ellipse at 68% 34%, rgba(205,221,244,0.24), transparent 28%), linear-gradient(145deg, #0c111b 0%, #151d2b 52%, #05070c 100%)',
+    sector: 'Aerospace', focus: 'Fuel Efficiency',
+    imgUrl: '/images/portfolio-2.jpg',
+    fallback: 'linear-gradient(145deg, #0c111b 0%, #151d2b 52%, #05070c 100%)',
   },
   {
-    num: '03',
+    num: '03', discipline: 'CFD',
     title: 'Oil & Gas Flow Simulation',
-    sector: 'Energy',
-    discipline: 'CFD',
-    focus: 'Flow Assurance',
-    visual: 'linear-gradient(120deg, rgba(205,221,244,0.18), transparent 28%), radial-gradient(circle at 72% 72%, rgba(93,107,136,0.42), transparent 30%), #080c13',
+    sector: 'Energy', focus: 'Flow Assurance',
+    imgUrl: '/images/portfolio-3.jpg',
+    fallback: 'radial-gradient(circle at 72% 72%, rgba(93,107,136,0.42), transparent 30%), #080c13',
   },
   {
-    num: '04',
+    num: '04', discipline: 'CAE',
     title: 'Automotive Thermal Management',
-    sector: 'Automotive',
-    discipline: 'CAE',
-    focus: 'Battery Life',
-    visual: 'radial-gradient(circle at 38% 68%, rgba(205,221,244,0.22), transparent 24%), linear-gradient(160deg, #151b27 0%, #05070c 70%)',
+    sector: 'Automotive', focus: 'Battery Life',
+    imgUrl: '/images/portfolio-4.jpg',
+    fallback: 'linear-gradient(160deg, #151b27 0%, #05070c 70%)',
   },
   {
-    num: '05',
-    title: 'Manufacturing Process Automation',
-    sector: 'Manufacturing',
-    discipline: 'AUTO',
-    focus: 'Quality Control',
-    visual: 'linear-gradient(90deg, rgba(205,221,244,0.14), transparent 18%, rgba(205,221,244,0.1) 52%, transparent 72%), #0b1018',
+    num: '05', discipline: 'FDS',
+    title: 'Fire & Smoke Simulation',
+    sector: 'Safety', focus: 'Evacuation',
+    imgUrl: '/images/portfolio-5.jpg',
+    fallback: 'linear-gradient(90deg, #1a0e0a, #2a1208)',
   },
   {
-    num: '06',
-    title: 'CAE Stress Analysis for Automotive Components',
-    sector: 'Automotive',
-    discipline: 'CAE',
-    focus: 'Structural Integrity',
-    visual: 'radial-gradient(circle at 78% 24%, rgba(205,221,244,0.2), transparent 24%), linear-gradient(140deg, #05070c 0%, #121a27 100%)',
+    num: '06', discipline: 'CAE',
+    title: 'CAE Stress Analysis',
+    sector: 'Automotive', focus: 'Structural Integrity',
+    imgUrl: '/images/portfolio-6.jpg',
+    fallback: 'linear-gradient(140deg, #05070c 0%, #121a27 100%)',
   },
+  // ↓ Add more projects below ↓
 ]
 
 function ScanVisual({ project }) {
+  const [imgError, setImgError] = useState(false)
+
   return (
     <div style={{
-      position: 'relative',
-      height: 310,
-      background: project.visual,
+      position: 'relative', height: 310,
       borderBottom: '1px solid var(--rule)',
       overflow: 'hidden',
     }}>
+      {/* background: real photo or fallback gradient */}
+      {project.imgUrl && !imgError ? (
+        <img
+          src={project.imgUrl}
+          alt={project.title}
+          onError={() => setImgError(true)}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      ) : (
+        <div style={{ position: 'absolute', inset: 0, background: project.fallback }} />
+      )}
+
+      {/* geometric overlays — work over both dark photos and dark fallback */}
       <div style={{
-        position: 'absolute',
-        inset: 0,
+        position: 'absolute', inset: 0,
         backgroundImage:
           'linear-gradient(90deg, rgba(238,242,249,0.07) 1px, transparent 1px), linear-gradient(rgba(238,242,249,0.07) 1px, transparent 1px)',
         backgroundSize: '46px 46px',
         maskImage: 'linear-gradient(to bottom, black, transparent 85%)',
       }} />
       <div style={{
-        position: 'absolute',
-        left: '12%',
-        right: '12%',
-        top: '24%',
-        height: '46%',
+        position: 'absolute', left: '12%', right: '12%', top: '24%', height: '46%',
         border: '1px solid rgba(238,242,249,0.34)',
         transform: 'skewX(-12deg)',
       }} />
       <div style={{
-        position: 'absolute',
-        left: '18%',
-        right: '18%',
-        top: '36%',
-        height: 1,
+        position: 'absolute', left: '18%', right: '18%', top: '36%', height: 1,
         background: 'rgba(238,242,249,0.45)',
         transform: 'rotate(-8deg)',
       }} />
       <div style={{
-        position: 'absolute',
-        right: '1.2rem',
-        bottom: '1rem',
-        fontFamily: 'var(--font-display)',
-        fontSize: 'clamp(5rem, 10vw, 9rem)',
-        lineHeight: 0.8,
-        fontWeight: 700,
-        color: 'rgba(238,242,249,0.08)',
+        position: 'absolute', right: '1.2rem', bottom: '1rem',
+        fontFamily: 'var(--font-display)', fontSize: 'clamp(5rem, 10vw, 9rem)',
+        lineHeight: 0.8, fontWeight: 700,
+        color: 'rgba(238,242,249,0.12)',
       }}>
         {project.discipline}
       </div>
@@ -122,41 +121,28 @@ function CaseCard({ project, i }) {
       <ScanVisual project={project} />
       <div style={{ padding: '1.6rem 1.8rem 1.8rem' }}>
         <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          gap: '1.5rem',
+          display: 'flex', justifyContent: 'space-between', gap: '1.5rem',
           marginBottom: '1.2rem',
-          fontFamily: 'var(--font-mono)',
-          fontSize: '0.58rem',
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          color: 'var(--muted)',
+          fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
+          letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)',
         }}>
           <span>{project.sector}</span>
           <span>{project.focus}</span>
         </div>
         <h3 style={{
-          fontFamily: 'var(--font-display)',
+          fontFamily: 'var(--font-display)', fontWeight: 700,
           fontSize: 'clamp(2rem, 3.5vw, 3.9rem)',
-          lineHeight: 0.95,
-          textTransform: 'uppercase',
-          color: 'var(--white)',
-          maxWidth: 520,
+          lineHeight: 0.95, textTransform: 'uppercase',
+          color: 'var(--white)', maxWidth: 520,
         }}>
           {project.title}
         </h3>
         <div style={{
           marginTop: '1.5rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderTop: '1px solid var(--rule)',
-          paddingTop: '1rem',
-          fontFamily: 'var(--font-mono)',
-          fontSize: '0.62rem',
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          color: 'var(--accent)',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          borderTop: '1px solid var(--rule)', paddingTop: '1rem',
+          fontFamily: 'var(--font-mono)', fontSize: '0.62rem',
+          letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--accent)',
         }}>
           <span>Case {project.num}</span>
           <span>View Study</span>
@@ -174,12 +160,11 @@ export default function Portfolio() {
     <section id="portfolio" style={{ padding: '8rem 0 9rem', background: 'var(--bg)', borderTop: '1px solid var(--rule)', overflow: 'hidden' }}>
       <div style={{ padding: '0 2.5rem', display: 'grid', gridTemplateColumns: '1fr 0.8fr', gap: '4rem', alignItems: 'end', marginBottom: '3.5rem' }}>
         <div>
-          <div className="tag" style={{ marginBottom: '1.4rem' }}>03 - CASE STUDIES</div>
+          <div className="tag" style={{ marginBottom: '1.4rem' }}>Portfolio</div>
           <h2 style={{
             fontFamily: 'var(--font-display)', fontWeight: 700,
             fontSize: 'clamp(3rem, 6vw, 7rem)',
-            textTransform: 'uppercase', lineHeight: 0.9, color: 'var(--white)',
-            maxWidth: 760,
+            textTransform: 'uppercase', lineHeight: 0.9, color: 'var(--white)', maxWidth: 760,
           }}>
             Precision<br />applied at scale
           </h2>
@@ -190,14 +175,11 @@ export default function Portfolio() {
               key={dir}
               onClick={() => scroll(dir)}
               data-hover
-              aria-label={dir < 0 ? 'Previous case study' : 'Next case study'}
+              aria-label={dir < 0 ? 'Previous' : 'Next'}
               style={{
-                width: 54,
-                height: 54,
-                border: '1px solid var(--rule2)',
-                color: 'var(--white)',
-                fontFamily: 'var(--font-display)',
-                fontSize: '1.6rem',
+                width: 54, height: 54,
+                border: '1px solid var(--rule2)', color: 'var(--white)',
+                fontFamily: 'var(--font-display)', fontSize: '1.6rem',
                 transition: 'background 0.2s, color 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = 'var(--white)'; e.currentTarget.style.color = 'var(--bg)' }}
@@ -212,15 +194,12 @@ export default function Portfolio() {
       <div
         ref={railRef}
         style={{
-          display: 'flex',
-          gap: '1rem',
-          overflowX: 'auto',
-          padding: '0 2.5rem 1rem',
-          scrollSnapType: 'x proximity',
-          scrollbarWidth: 'none',
+          display: 'flex', gap: '1rem',
+          overflowX: 'auto', padding: '0 2.5rem 1rem',
+          scrollSnapType: 'x proximity', scrollbarWidth: 'none',
         }}
       >
-        {projects.map((project, i) => (
+        {PROJECTS.map((project, i) => (
           <div key={project.num} style={{ scrollSnapAlign: 'start' }}>
             <CaseCard project={project} i={i} />
           </div>

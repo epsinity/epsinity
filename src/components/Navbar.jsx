@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
 const LINKS = [
-  { label: 'Home',       id: 'intro' },
-  { label: 'Expertise',  id: 'expertise' },
-  { label: 'Portfolio',  id: 'portfolio' },
-  { label: 'Contact',    id: 'contact' },
+  { label: 'Home',      id: 'intro' },
+  { label: 'Portfolio', id: 'portfolio' },
+  { label: 'Services',  id: 'services' },
+  { label: 'About',     id: 'about' },
+  { label: 'Contact',   id: 'contact' },
 ]
 
 export default function Navbar() {
@@ -30,7 +31,7 @@ export default function Navbar() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 2.5rem',
         borderBottom: `1px solid ${scrolled ? 'var(--rule)' : 'transparent'}`,
-        background: scrolled ? 'rgba(4,6,10,0.92)' : 'transparent',
+        background: scrolled ? 'rgba(242,245,249,0.95)' : 'transparent',
         backdropFilter: scrolled ? 'blur(16px)' : 'none',
         transition: 'background 0.4s, border-color 0.4s',
       }}
@@ -38,16 +39,14 @@ export default function Navbar() {
       {/* logo */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', letterSpacing: '0.3em', color: 'var(--white)' }}
+        style={{ display: 'flex', alignItems: 'center', lineHeight: 0, padding: 0 }}
       >
-        EPSINITY
+        <img
+          src="/logo.svg"
+          alt="Epsinity"
+          style={{ height: 36, width: 'auto' }}
+        />
       </button>
-
-      {/* status chip */}
-      <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', fontFamily:'var(--font-mono)', fontSize:'0.55rem', color:'var(--muted)', letterSpacing:'0.12em' }}>
-        <span style={{ width:5, height:5, borderRadius:'50%', background:'rgba(200,240,200,0.7)', display:'inline-block' }} />
-        SYS:OPERATIONAL
-      </div>
 
       {/* nav links */}
       <nav style={{ display:'flex', gap:'2rem', alignItems:'center' }}>
@@ -63,20 +62,6 @@ export default function Navbar() {
             {label}
           </button>
         ))}
-        <a
-          href="mailto:contact@epsinity.com"
-          data-hover
-          style={{
-            fontFamily:'var(--font-mono)', fontSize:'0.6rem', letterSpacing:'0.16em',
-            textTransform:'uppercase', padding:'7px 18px',
-            border:'1px solid var(--muted)', color:'var(--dim)',
-            transition:'border-color 0.2s, color 0.2s',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor='var(--white)'; e.currentTarget.style.color='var(--white)' }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor='var(--muted)'; e.currentTarget.style.color='var(--dim)' }}
-        >
-          Book Demo
-        </a>
       </nav>
     </motion.header>
   )

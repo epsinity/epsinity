@@ -2,9 +2,9 @@ import Cursor from './components/Cursor'
 import Navbar from './components/Navbar'
 import Intro from './components/Intro'
 import Solutions from './components/Solutions'
-import Expertise from './components/Expertise'
 import Portfolio from './components/Portfolio'
-import Legacy from './components/Legacy'
+import Services from './components/Services'
+import About from './components/About'
 import Contact from './components/Contact'
 
 export default function App() {
@@ -15,9 +15,9 @@ export default function App() {
       <main>
         <Intro />
         <Solutions />
-        <Expertise />
         <Portfolio />
-        <Legacy />
+        <Services />
+        <About />
         <Contact />
       </main>
     </>

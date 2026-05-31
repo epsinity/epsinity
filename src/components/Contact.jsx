@@ -34,7 +34,7 @@ export default function Contact() {
   const ref = useRef()
   const inView = useInView(ref, { once: true, amount: 0.2 })
 
-  const [form, setForm] = useState({ first: '', last: '', email: '', type: '', desc: '' })
+  const [form, setForm] = useState({ first: '', last: '', email: '', mobile: '', type: '', desc: '' })
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }))
 
   const submit = (e) => {
@@ -42,36 +42,23 @@ export default function Contact() {
     if (!form.type) return
     const subject = encodeURIComponent(`Consultation Request - ${form.type}`)
     const body = encodeURIComponent(
-      `Name: ${form.first} ${form.last}\nBusiness Email: ${form.email}\nConsultation Type: ${form.type}\n\nProject Description:\n${form.desc}`
+      `Name: ${form.first} ${form.last}\nBusiness Email: ${form.email}\nMobile: ${form.mobile}\nConsultation Type: ${form.type}\n\nProject Description:\n${form.desc}`
     )
     window.location.href = `mailto:contact@epsinity.com?subject=${subject}&body=${body}`
   }
 
   const focusBorder = e => { e.target.style.borderColor = 'var(--accent)' }
-  const blurBorder = e => { e.target.style.borderColor = 'var(--rule2)' }
+  const blurBorder  = e => { e.target.style.borderColor = 'var(--rule2)' }
 
   return (
-    <section id="contact" className="light" style={{
+    <section id="contact" style={{
       padding: '9rem 2.5rem 4rem',
       background: 'var(--bg)',
       borderTop: '1px solid var(--rule)',
       position: 'relative', overflow: 'hidden',
     }}>
-      {/* ghost text */}
-      <div style={{
-        position: 'absolute', bottom: '-0.06em', right: '-0.04em',
-        fontFamily: 'var(--font-display)', fontWeight: 700,
-        fontSize: 'clamp(7rem, 16vw, 20rem)',
-        lineHeight: 1, textTransform: 'uppercase',
-        color: 'var(--grid-line)',
-        letterSpacing: '-0.04em',
-        userSelect: 'none', pointerEvents: 'none', whiteSpace: 'nowrap',
-      }}>
-        EPSINITY
-      </div>
-
       <div style={{ position: 'relative', zIndex: 2 }} ref={ref}>
-        <div className="tag" style={{ marginBottom: '2.5rem' }}>05 - CONTACT</div>
+        <div className="tag" style={{ marginBottom: '2.5rem' }}>Contact</div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start' }}>
           {/* left: heading + details */}
@@ -84,11 +71,10 @@ export default function Contact() {
                 fontFamily: 'var(--font-display)', fontWeight: 700,
                 fontSize: 'clamp(2.6rem, 5.5vw, 6rem)',
                 lineHeight: 0.95, textTransform: 'uppercase',
-                letterSpacing: '0.01em', color: 'var(--white)',
-                marginBottom: '1.8rem',
+                letterSpacing: '0.01em', color: 'var(--white)', marginBottom: '1.8rem',
               }}
             >
-              Start Your<br />Project
+              Explain Your<br />Problem
             </motion.h2>
 
             <motion.p
@@ -97,11 +83,10 @@ export default function Contact() {
               transition={{ delay: 0.25, duration: 0.6 }}
               style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', lineHeight: 1.95, color: 'var(--dim)', maxWidth: 460, marginBottom: '3.5rem' }}
             >
-              Every precise solution begins at the limit of a well-defined
-              problem. Share yours.
+              Reach out to discuss your technical simulation requirements. Our consulting
+              team is ready to assist with custom CFD and CAE inquiries and training sessions.
             </motion.p>
 
-            {/* detail blocks */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <div>
                 <div style={labelStyle}>Technical Hub</div>
@@ -115,15 +100,9 @@ export default function Contact() {
               </div>
               <div style={{ display: 'flex', gap: '3.5rem' }}>
                 <div>
-                  <div style={labelStyle}>Availability</div>
+                  <div style={labelStyle}>Consultation Availability</div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--dim)', lineHeight: 1.7 }}>
-                    Global Operations<br />Monday - Friday
-                  </div>
-                </div>
-                <div>
-                  <div style={labelStyle}>Disciplines</div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--dim)', lineHeight: 1.7 }}>
-                    CFD | FEA | CAE
+                    Global Operations<br />Monday — Friday
                   </div>
                 </div>
               </div>
@@ -143,6 +122,7 @@ export default function Contact() {
               display: 'flex', flexDirection: 'column', gap: '1.8rem',
             }}
           >
+            {/* First + Last Name */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <Field label="First Name *">
                 <input required value={form.first} onChange={set('first')} onFocus={focusBorder} onBlur={blurBorder} style={inputStyle} />
@@ -156,32 +136,38 @@ export default function Contact() {
               <input required type="email" value={form.email} onChange={set('email')} onFocus={focusBorder} onBlur={blurBorder} style={inputStyle} />
             </Field>
 
-            <Field label="Consultation Type * — select one">
-              <div style={{ display: 'flex', gap: '0.8rem', marginTop: '0.3rem' }}>
-                {['CFD Analysis', 'CAE Simulation'].map(t => (
-                  <button key={t} type="button" data-hover
-                    onClick={() => setForm(f => ({ ...f, type: t }))}
-                    style={{
-                      flex: 1, padding: '0.7rem',
-                      fontFamily: 'var(--font-mono)', fontSize: '0.65rem',
-                      letterSpacing: '0.1em', textTransform: 'uppercase',
-                      border: `1px solid ${form.type === t ? 'var(--accent)' : 'var(--rule2)'}`,
-                      color: form.type === t ? 'var(--bg)' : 'var(--dim)',
-                      background: form.type === t ? 'var(--accent)' : 'transparent',
-                      transition: 'all 0.2s', cursor: 'pointer',
-                    }}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
+            <Field label="Mobile Number">
+              <input type="tel" value={form.mobile} onChange={set('mobile')}
+                onFocus={focusBorder} onBlur={blurBorder}
+                placeholder="+1 000 000 0000"
+                style={inputStyle} />
+            </Field>
+
+            <Field label="Consultation Type *">
+              <select
+                required
+                value={form.type}
+                onChange={set('type')}
+                onFocus={focusBorder}
+                onBlur={blurBorder}
+                style={{
+                  ...inputStyle,
+                  appearance: 'none',
+                  WebkitAppearance: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                <option value="" disabled style={{ background: 'var(--surface)' }}>Select...</option>
+                <option value="Consultancy" style={{ background: 'var(--surface)' }}>Consultancy</option>
+                <option value="Training" style={{ background: 'var(--surface)' }}>Training</option>
+              </select>
             </Field>
 
             <Field label="Project Description">
               <textarea value={form.desc} onChange={set('desc')} onFocus={focusBorder} onBlur={blurBorder}
                 placeholder="Tell us about your engineering requirements..."
                 rows={3}
-                style={{ ...inputStyle, resize: 'none', borderBottom: '1px solid var(--rule2)' }}
+                style={{ ...inputStyle, resize: 'none' }}
               />
             </Field>
 
@@ -190,12 +176,12 @@ export default function Contact() {
                 marginTop: '0.5rem', padding: '14px',
                 fontFamily: 'var(--font-mono)', fontSize: '0.66rem',
                 letterSpacing: '0.2em', textTransform: 'uppercase',
-                border: '1px solid var(--accent)', color: 'var(--white)',
+                border: '1px solid var(--accent)', color: 'var(--accent)',
                 background: 'transparent', cursor: 'pointer',
                 transition: 'background 0.22s, color 0.22s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = 'var(--bg)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--white)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = 'var(--surface)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent)' }}
             >
               Request Consultation
             </button>
@@ -212,9 +198,9 @@ export default function Contact() {
         letterSpacing: '0.1em', color: 'var(--muted)',
         position: 'relative', zIndex: 2, flexWrap: 'wrap', gap: '1rem',
       }}>
-        <span style={{ color: 'var(--dim)' }}>AUTOMOTIVE | AEROSPACE | ENERGY</span>
+        <span>AUTOMOTIVE | AEROSPACE | ENERGY</span>
         <span>Copyright 2026 EPSINITY — Simulation at the precision of physics.</span>
-        <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-display)', fontSize: '0.85rem' }}>EPSINITY</span>
+        <img src="/logo.svg" alt="Epsinity" style={{ height: 22, width: 'auto', opacity: 0.5 }} />
       </div>
     </section>
   )
