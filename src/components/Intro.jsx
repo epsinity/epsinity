@@ -174,7 +174,7 @@ export default function Intro() {
           {['ENGINEERING', 'PRECISION'].map(w => (
             <HeroWord key={w} word={w}
               baseColor="var(--white)" fontWeight={700}
-              fontSize="clamp(2.4rem, 5.8vw, 7rem)"
+              fontSize={isMobile ? 'clamp(2.6rem, 12vw, 4rem)' : 'clamp(2.4rem, 5.8vw, 7rem)'}
               transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
             />
           ))}
@@ -188,7 +188,7 @@ export default function Intro() {
           {['THROUGH', 'CFD', '&', 'CAE', 'SIMULATION'].map((w, i) => (
             <HeroWord key={i} word={w}
               baseColor="var(--muted)" fontWeight={300}
-              fontSize="clamp(1.3rem, 3.6vw, 4rem)"
+              fontSize={isMobile ? 'clamp(1.4rem, 6vw, 2.5rem)' : 'clamp(1.3rem, 3.6vw, 4rem)'}
               transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             />
           ))}
@@ -200,7 +200,7 @@ export default function Intro() {
           transition={{ delay: 1.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           style={{
             marginTop: '1.1rem',
-            fontFamily: 'var(--font-mono)', fontSize: '0.78rem',
+            fontFamily: 'var(--font-mono)', fontSize: isMobile ? '0.95rem' : '0.78rem',
             lineHeight: 1.75, color: 'var(--muted)', fontStyle: 'italic',
             maxWidth: 460,
           }}

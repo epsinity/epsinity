@@ -144,28 +144,31 @@ function SolutionPanel({ sol, isMobile }) {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: isMobile ? 'flex-start' : 'space-between',
+        gap: isMobile ? '2rem' : 0,
         padding: isMobile ? '2rem 1.5rem' : 'clamp(3rem, 4.5vw, 5.5rem) clamp(2.5rem, 4vw, 5.5rem)',
         background: 'var(--bg2)',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* Ghost code watermark */}
-      <div style={{
-        position: 'absolute',
-        right: '-0.04em',
-        bottom: '-0.1em',
-        fontFamily: 'var(--font-display)',
-        fontWeight: 700,
-        fontSize: 'clamp(8rem, 15vw, 19rem)',
-        lineHeight: 0.8,
-        color: 'rgba(29,60,102,0.06)',
-        pointerEvents: 'none',
-        userSelect: 'none',
-      }}>
-        {sol.code}
-      </div>
+      {/* Ghost code watermark — hidden on mobile to prevent overflow */}
+      {!isMobile && (
+        <div style={{
+          position: 'absolute',
+          right: '-0.04em',
+          bottom: '-0.1em',
+          fontFamily: 'var(--font-display)',
+          fontWeight: 700,
+          fontSize: 'clamp(8rem, 15vw, 19rem)',
+          lineHeight: 0.8,
+          color: 'rgba(29,60,102,0.06)',
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}>
+          {sol.code}
+        </div>
+      )}
 
       {/* Corner brackets */}
       {[
@@ -183,9 +186,9 @@ function SolutionPanel({ sol, isMobile }) {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '2.5rem',
+          marginBottom: isMobile ? '1.2rem' : '2.5rem',
           fontFamily: 'var(--font-mono)',
-          fontSize: '0.55rem',
+          fontSize: isMobile ? '0.7rem' : '0.55rem',
           letterSpacing: '0.18em',
           color: 'var(--muted)',
         }}>
@@ -199,12 +202,12 @@ function SolutionPanel({ sol, isMobile }) {
           style={{
             fontFamily: 'var(--font-display)',
             fontWeight: 700,
-            fontSize: 'clamp(3rem, 5.5vw, 7rem)',
+            fontSize: isMobile ? 'clamp(2.2rem, 10vw, 3.5rem)' : 'clamp(3rem, 5.5vw, 7rem)',
             lineHeight: 0.9,
             textTransform: 'uppercase',
             whiteSpace: 'pre-line',
             color: 'var(--white)',
-            marginBottom: '2rem',
+            marginBottom: isMobile ? '1.2rem' : '2rem',
             overflow: 'hidden',
           }}
         >
@@ -217,8 +220,8 @@ function SolutionPanel({ sol, isMobile }) {
           transition={{ delay: 0.22, duration: 0.45 }}
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.78rem',
-            lineHeight: 1.95,
+            fontSize: isMobile ? '0.88rem' : '0.78rem',
+            lineHeight: 1.85,
             color: 'var(--dim)',
             maxWidth: 500,
           }}
@@ -331,7 +334,7 @@ export default function Solutions() {
       ref={sectionRef}
       style={{
         width: '100vw',
-        height: '100vh',
+        height: '100svh',
         background: 'var(--bg)',
         display: 'flex',
         flexDirection: 'column',

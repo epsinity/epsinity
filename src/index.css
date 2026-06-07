@@ -93,6 +93,11 @@ img { display: block; max-width: 100%; }
   display: inline-block;
 }
 
+/* scale up base font on mobile so rem-based text is readable */
+@media (max-width: 768px) {
+  html { font-size: 18px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
