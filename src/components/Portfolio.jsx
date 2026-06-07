@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useMediaQuery } from '../hooks/useResponsive'
 
 // ─── ADD PROJECTS HERE ────────────────────────────────────────────────────────
 // Add an object to this array. Drop the image in /public/images/ and set imgUrl.
@@ -154,11 +155,19 @@ function CaseCard({ project, i }) {
 
 export default function Portfolio() {
   const railRef = useRef(null)
+  const isMobile = useMediaQuery('(max-width: 768px)')
   const scroll = dir => railRef.current?.scrollBy({ left: dir * 660, behavior: 'smooth' })
 
   return (
-    <section id="portfolio" style={{ padding: '8rem 0 9rem', background: 'var(--bg)', borderTop: '1px solid var(--rule)', overflow: 'hidden' }}>
-      <div style={{ padding: '0 2.5rem', display: 'grid', gridTemplateColumns: '1fr 0.8fr', gap: '4rem', alignItems: 'end', marginBottom: '3.5rem' }}>
+    <section id="portfolio" style={{ padding: isMobile ? '5rem 0 6rem' : '8rem 0 9rem', background: 'var(--bg)', borderTop: '1px solid var(--rule)', overflow: 'hidden' }}>
+      <div style={{
+        padding: isMobile ? '0 1.5rem' : '0 2.5rem',
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 0.8fr',
+        gap: isMobile ? '1.5rem' : '4rem',
+        alignItems: 'end',
+        marginBottom: '3.5rem',
+      }}>
         <div>
           <div className="tag" style={{ marginBottom: '1.4rem' }}>Portfolio</div>
           <h2 style={{
@@ -169,7 +178,7 @@ export default function Portfolio() {
             Precision<br />applied at scale
           </h2>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.8rem' }}>
+        <div style={{ display: 'flex', justifyContent: isMobile ? 'flex-start' : 'flex-end', gap: '0.8rem' }}>
           {[-1, 1].map(dir => (
             <button
               key={dir}
@@ -195,7 +204,7 @@ export default function Portfolio() {
         ref={railRef}
         style={{
           display: 'flex', gap: '1rem',
-          overflowX: 'auto', padding: '0 2.5rem 1rem',
+          overflowX: 'auto', padding: isMobile ? '0 1.5rem 1rem' : '0 2.5rem 1rem',
           scrollSnapType: 'x proximity', scrollbarWidth: 'none',
         }}
       >

@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
+import { useMediaQuery } from '../hooks/useResponsive'
 
 const inputStyle = {
   width: '100%',
@@ -33,6 +34,7 @@ function Field({ label, children }) {
 export default function Contact() {
   const ref = useRef()
   const inView = useInView(ref, { once: true, amount: 0.2 })
+  const isMobile = useMediaQuery('(max-width: 768px)')
 
   const [form, setForm] = useState({ first: '', last: '', email: '', mobile: '', type: '', desc: '' })
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }))
@@ -52,7 +54,7 @@ export default function Contact() {
 
   return (
     <section id="contact" style={{
-      padding: '9rem 2.5rem 4rem',
+      padding: isMobile ? '6rem 1.5rem 3rem' : '9rem 2.5rem 4rem',
       background: 'var(--bg)',
       borderTop: '1px solid var(--rule)',
       position: 'relative', overflow: 'hidden',
@@ -60,7 +62,12 @@ export default function Contact() {
       <div style={{ position: 'relative', zIndex: 2 }} ref={ref}>
         <div className="tag" style={{ marginBottom: '2.5rem' }}>Contact</div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+          gap: isMobile ? '3rem' : '5rem',
+          alignItems: 'start',
+        }}>
           {/* left: heading + details */}
           <div>
             <motion.h2
@@ -118,12 +125,12 @@ export default function Contact() {
             style={{
               background: 'var(--surface)',
               border: '1px solid var(--rule)',
-              padding: '2.5rem',
+              padding: isMobile ? '1.8rem 1.4rem' : '2.5rem',
               display: 'flex', flexDirection: 'column', gap: '1.8rem',
             }}
           >
             {/* First + Last Name */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1.5rem' }}>
               <Field label="First Name *">
                 <input required value={form.first} onChange={set('first')} onFocus={focusBorder} onBlur={blurBorder} style={inputStyle} />
               </Field>
@@ -198,7 +205,7 @@ export default function Contact() {
         letterSpacing: '0.1em', color: 'var(--muted)',
         position: 'relative', zIndex: 2, flexWrap: 'wrap', gap: '1rem',
       }}>
-        <span>AUTOMOTIVE | AEROSPACE | ENERGY</span>
+        {!isMobile && <span>AUTOMOTIVE | AEROSPACE | ENERGY</span>}
         <span>Copyright 2026 EPSINITY — Simulation at the precision of physics.</span>
         <img src="/logo.svg" alt="Epsinity" style={{ height: 22, width: 'auto', opacity: 0.5 }} />
       </div>

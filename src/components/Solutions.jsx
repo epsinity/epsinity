@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useMediaQuery } from '../hooks/useResponsive'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -131,7 +132,7 @@ function Dial({ solutions, activeIdx, setActiveIdx }) {
   )
 }
 
-function SolutionPanel({ sol }) {
+function SolutionPanel({ sol, isMobile }) {
   return (
     <motion.div
       key={sol.id}
@@ -144,7 +145,7 @@ function SolutionPanel({ sol }) {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: 'clamp(3rem, 4.5vw, 5.5rem) clamp(2.5rem, 4vw, 5.5rem)',
+        padding: isMobile ? '2rem 1.5rem' : 'clamp(3rem, 4.5vw, 5.5rem) clamp(2.5rem, 4vw, 5.5rem)',
         background: 'var(--bg2)',
         position: 'relative',
         overflow: 'hidden',
@@ -270,6 +271,7 @@ export default function Solutions() {
   const lastIdx = useRef(0)
   const [activeIdx, setActiveIdx] = useState(0)
   const n = SOLUTIONS.length
+  const isMobile = useMediaQuery('(max-width: 768px)')
 
   // scroll-driven navigation: pin the section and advance solutions on scroll
   useEffect(() => {
@@ -341,7 +343,7 @@ export default function Solutions() {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '0.6rem 2.5rem',
+        padding: isMobile ? '0.6rem 1.5rem' : '0.6rem 2.5rem',
         borderBottom: '1px solid var(--rule)',
         fontFamily: 'var(--font-mono)',
         fontSize: '0.58rem',
@@ -368,7 +370,8 @@ export default function Solutions() {
             />
           ))}
         </div>
-        <span>SOL MATRIX / {String(activeIdx + 1).padStart(2, '0')} OF {SOLUTIONS.length}</span>
+        {!isMobile && <span>SOL MATRIX / {String(activeIdx + 1).padStart(2, '0')} OF {SOLUTIONS.length}</span>}
+        {isMobile && <span>{String(activeIdx + 1).padStart(2, '0')} / {SOLUTIONS.length}</span>}
       </div>
 
       {/* Body */}
@@ -379,11 +382,11 @@ export default function Solutions() {
       }}>
         {/* full-width active solution */}
         <AnimatePresence mode="wait">
-          <SolutionPanel key={activeIdx} sol={SOLUTIONS[activeIdx]} />
+          <SolutionPanel key={activeIdx} sol={SOLUTIONS[activeIdx]} isMobile={isMobile} />
         </AnimatePresence>
 
-        {/* compact corner dial selector (clipped to top-right) */}
-        <Dial solutions={SOLUTIONS} activeIdx={activeIdx} setActiveIdx={goTo} />
+        {/* compact corner dial selector — hidden on mobile */}
+        {!isMobile && <Dial solutions={SOLUTIONS} activeIdx={activeIdx} setActiveIdx={goTo} />}
       </div>
     </section>
   )

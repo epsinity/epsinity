@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useMediaQuery } from '../hooks/useResponsive'
 
 const rows = [
   {
@@ -137,16 +138,22 @@ function ServiceNode({ r, i }) {
 }
 
 export default function Services() {
+  const isMobile = useMediaQuery('(max-width: 640px)')
+  const isTablet = useMediaQuery('(max-width: 1024px)')
+
   return (
     <section id="services" style={{
-      padding: '8rem 2.5rem',
+      padding: isMobile ? '5rem 1.5rem' : '8rem 2.5rem',
       background: 'var(--bg2)',
       borderTop: '1px solid var(--rule)',
       position: 'relative',
     }}>
       <div style={{
-        display: 'grid', gridTemplateColumns: '1fr 0.78fr',
-        gap: '5rem', alignItems: 'end', marginBottom: '4rem',
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 0.78fr',
+        gap: isMobile ? '1.5rem' : '5rem',
+        alignItems: 'end',
+        marginBottom: '4rem',
       }}>
         <div>
           <div className="tag" style={{ marginBottom: '1.4rem' }}>Services</div>
@@ -169,7 +176,9 @@ export default function Services() {
       </div>
 
       <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem',
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+        gap: '1.5rem',
       }}>
         {rows.map((r, i) => <ServiceNode key={r.id} r={r} i={i} />)}
       </div>

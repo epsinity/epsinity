@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
+import { useMediaQuery } from '../hooks/useResponsive'
 
 export default function Cursor() {
+  const isTouch = useMediaQuery('(pointer: coarse)')
   const [hovered, setHovered] = useState(false)
   const rx = useMotionValue(-100), ry = useMotionValue(-100)
 
@@ -18,6 +20,8 @@ export default function Cursor() {
     window.addEventListener('mouseover', onOver)
     return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseover', onOver) }
   }, [rx, ry])
+
+  if (isTouch) return null
 
   return (
     <>

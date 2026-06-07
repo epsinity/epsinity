@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { useMediaQuery } from '../hooks/useResponsive'
 
 const wordVar = {
   hidden: { clipPath: 'inset(0 0 100% 0)', y: '55%' },
@@ -70,11 +71,14 @@ function HeroWord({ word, baseColor, fontWeight, fontSize, transition }) {
 }
 
 export default function Intro() {
+  const isMobile = useMediaQuery('(max-width: 768px)')
+
   return (
     <section id="intro" style={{
-      position: 'relative', width: '100vw', height: '100vh',
+      position: 'relative', width: '100vw', height: '100svh',
       display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-      padding: '80px 2.5rem 3.5rem', overflow: 'hidden',
+      padding: isMobile ? '80px 1.5rem 3rem' : '80px 2.5rem 3.5rem',
+      overflow: 'hidden',
     }}>
 
       {/* ── Convergence SVG background ── */}
@@ -104,7 +108,7 @@ export default function Intro() {
         </svg>
       </div>
 
-      {/* ── Hero image: right panel, single left-edge fade ── */}
+      {/* ── Hero image ── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -113,7 +117,7 @@ export default function Intro() {
           position: 'absolute',
           right: 0,
           top: 0,
-          width: '55%',
+          width: isMobile ? '100%' : '55%',
           height: '100%',
           overflow: 'hidden',
           zIndex: 1,
@@ -131,20 +135,21 @@ export default function Intro() {
             display: 'block',
           }}
         />
-        {/* Left-edge fade — blends image into the text column */}
         <div aria-hidden style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to right, var(--bg) 0%, var(--bg) 6%, rgba(232,236,243,0.75) 20%, transparent 42%)',
+          background: isMobile
+            ? 'linear-gradient(to bottom, var(--bg) 0%, rgba(232,236,243,0.55) 40%, rgba(232,236,243,0.75) 100%), linear-gradient(to right, var(--bg) 0%, transparent 60%)'
+            : 'linear-gradient(to right, var(--bg) 0%, var(--bg) 6%, rgba(232,236,243,0.75) 20%, transparent 42%)',
           pointerEvents: 'none',
         }} />
       </motion.div>
 
       {/* ── Corner reticles ── */}
       {[
-        { top: 72, left: 40 },
-        { top: 72, right: 40 },
-        { bottom: 40, left: 40 },
-        { bottom: 40, right: 40 },
+        { top: 72, left: isMobile ? 24 : 40 },
+        { top: 72, right: isMobile ? 24 : 40 },
+        { bottom: 40, left: isMobile ? 24 : 40 },
+        { bottom: 40, right: isMobile ? 24 : 40 },
       ].map((pos, i) => (
         <motion.div key={i}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}
@@ -159,8 +164,8 @@ export default function Intro() {
         />
       ))}
 
-      {/* ── Main headline (left half, bottom-anchored) ── */}
-      <div style={{ position: 'relative', zIndex: 2, maxWidth: '50%' }}>
+      {/* ── Main headline ── */}
+      <div style={{ position: 'relative', zIndex: 2, maxWidth: isMobile ? '100%' : '50%' }}>
         <motion.div
           initial="hidden" animate="visible"
           transition={{ staggerChildren: 0.11, delayChildren: 0.35 }}
@@ -203,20 +208,22 @@ export default function Intro() {
           Where the smallest computational cell resolves the largest physical truth.
         </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.35, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            marginTop: '0.6rem',
-            fontFamily: 'var(--font-mono)', fontSize: '0.76rem',
-            lineHeight: 1.9, color: 'var(--dim)', maxWidth: 460,
-          }}
-        >
-          We empower automotive, aerospace, and energy industries with advanced
-          computational software consultancy — enhancing operational efficiency and
-          driving technical innovation worldwide.
-        </motion.p>
+        {!isMobile && (
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.35, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              marginTop: '0.6rem',
+              fontFamily: 'var(--font-mono)', fontSize: '0.76rem',
+              lineHeight: 1.9, color: 'var(--dim)', maxWidth: 460,
+            }}
+          >
+            We empower automotive, aerospace, and energy industries with advanced
+            computational software consultancy — enhancing operational efficiency and
+            driving technical innovation worldwide.
+          </motion.p>
+        )}
       </div>
 
       {/* ── Bottom strip: CTA + scroll hint ── */}
@@ -249,16 +256,18 @@ export default function Intro() {
             Get Consultation
           </button>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
-              style={{ width: 1, height: 28, background: 'var(--muted)' }}
-            />
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: 'var(--muted)' }}>
-              SCROLL
-            </span>
-          </div>
+          {!isMobile && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
+                style={{ width: 1, height: 28, background: 'var(--muted)' }}
+              />
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: 'var(--muted)' }}>
+                SCROLL
+              </span>
+            </div>
+          )}
         </div>
       </motion.div>
     </section>

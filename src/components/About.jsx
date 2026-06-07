@@ -1,13 +1,22 @@
 import { motion } from 'framer-motion'
+import { useMediaQuery } from '../hooks/useResponsive'
 
 export default function About() {
+  const isMobile = useMediaQuery('(max-width: 768px)')
+
   return (
     <section id="about" style={{
       background: 'var(--bg)', color: 'var(--white)',
-      padding: '8rem 2.5rem', borderTop: '1px solid var(--rule)', overflow: 'hidden',
+      padding: isMobile ? '5rem 1.5rem' : '8rem 2.5rem',
+      borderTop: '1px solid var(--rule)', overflow: 'hidden',
     }}>
       <div style={{ maxWidth: 1220, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '0.9fr 1.1fr', gap: '4.5rem', alignItems: 'center' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '0.9fr 1.1fr',
+          gap: isMobile ? '3rem' : '4.5rem',
+          alignItems: 'center',
+        }}>
 
           {/* Left: text */}
           <motion.div
