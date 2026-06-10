@@ -10,6 +10,38 @@ const LINKS = [
   { label: 'Contact',   id: 'contact' },
 ]
 
+function NavLink({ label, onClick }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <button
+      data-hover
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: 'relative',
+        fontFamily: 'var(--font-mono)', fontSize: '0.62rem',
+        letterSpacing: '0.16em', textTransform: 'uppercase',
+        color: hovered ? 'var(--white)' : 'var(--dim)',
+        transition: 'color 0.2s',
+        paddingBottom: '3px',
+      }}
+    >
+      {label}
+      <motion.span
+        animate={{ scaleX: hovered ? 1 : 0 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+        style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          height: '1px', background: 'var(--accent)',
+          transformOrigin: 'left',
+          display: 'block',
+        }}
+      />
+    </button>
+  )
+}
+
 function HamburgerIcon({ open }) {
   return (
     <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden>
@@ -94,16 +126,7 @@ export default function Navbar() {
         ) : (
           <nav style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
             {LINKS.map(({ label, id }) => (
-              <button
-                key={id}
-                data-hover
-                onClick={() => go(id)}
-                style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--dim)', transition: 'color 0.2s' }}
-                onMouseEnter={e => e.currentTarget.style.color = 'var(--white)'}
-                onMouseLeave={e => e.currentTarget.style.color = 'var(--dim)'}
-              >
-                {label}
-              </button>
+              <NavLink key={id} label={label} onClick={() => go(id)} />
             ))}
           </nav>
         )}

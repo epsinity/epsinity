@@ -238,37 +238,22 @@ export default function Intro() {
           position: 'relative', zIndex: 2,
         }}
       >
+        <button
+          onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+          data-hover
+          style={{
+            fontFamily: 'var(--font-mono)', fontSize: '0.62rem',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            padding: '12px 32px', border: '1px solid var(--accent)',
+            color: '#fff', background: 'var(--accent)',
+            transition: 'background 0.2s, color 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#fff' }}
+        >
+          Get Consultation
+        </button>
         <div />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-          <button
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            data-hover
-            style={{
-              fontFamily: 'var(--font-mono)', fontSize: '0.62rem',
-              letterSpacing: '0.2em', textTransform: 'uppercase',
-              padding: '12px 32px', border: '1px solid var(--accent)',
-              color: 'var(--accent)', background: 'transparent',
-              transition: 'background 0.2s, color 0.2s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#fff' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent)' }}
-          >
-            Get Consultation
-          </button>
-
-          {!isMobile && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
-              <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
-                style={{ width: 1, height: 28, background: 'var(--muted)' }}
-              />
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: 'var(--muted)' }}>
-                SCROLL
-              </span>
-            </div>
-          )}
-        </div>
       </motion.div>
     </section>
   )

@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
+
 import { useMediaQuery } from '../hooks/useResponsive'
 
 const inputStyle = {
@@ -37,6 +38,7 @@ export default function Contact() {
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   const [form, setForm] = useState({ first: '', last: '', email: '', mobile: '', type: '', desc: '' })
+  const [dropdownOpen, setDropdownOpen] = useState(false)
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }))
 
   const submit = (e) => {
@@ -151,23 +153,40 @@ export default function Contact() {
             </Field>
 
             <Field label="Consultation Type *">
-              <select
-                required
-                value={form.type}
-                onChange={set('type')}
-                onFocus={focusBorder}
-                onBlur={blurBorder}
-                style={{
-                  ...inputStyle,
-                  appearance: 'none',
-                  WebkitAppearance: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                <option value="" disabled style={{ background: 'var(--surface)' }}>Select...</option>
-                <option value="Consultancy" style={{ background: 'var(--surface)' }}>Consultancy</option>
-                <option value="Training" style={{ background: 'var(--surface)' }}>Training</option>
-              </select>
+              <div style={{ position: 'relative' }}>
+                <select
+                  required
+                  value={form.type}
+                  onChange={set('type')}
+                  onFocus={e => { focusBorder(e); setDropdownOpen(true) }}
+                  onBlur={e => { blurBorder(e); setDropdownOpen(false) }}
+                  style={{
+                    ...inputStyle,
+                    appearance: 'none',
+                    WebkitAppearance: 'none',
+                    cursor: 'pointer',
+                    paddingRight: '1.5rem',
+                  }}
+                >
+                  <option value="" disabled style={{ background: 'var(--surface)' }}>Select...</option>
+                  <option value="Consultancy" style={{ background: 'var(--surface)' }}>Consultancy</option>
+                  <option value="Training" style={{ background: 'var(--surface)' }}>Training</option>
+                </select>
+                <motion.span
+                  animate={{ rotate: dropdownOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  style={{
+                    position: 'absolute', right: 4, top: '50%', translateY: '-50%',
+                    pointerEvents: 'none', display: 'flex', alignItems: 'center',
+                    color: 'var(--muted)',
+                    transform: 'translateY(-50%)',
+                  }}
+                >
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden>
+                    <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </motion.span>
+              </div>
             </Field>
 
             <Field label="Project Description">
