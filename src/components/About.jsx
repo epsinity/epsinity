@@ -71,7 +71,7 @@ export default function About() {
                 letterSpacing: '0.16em', textTransform: 'uppercase',
                 color: 'var(--muted)', marginBottom: '2.5rem',
               }}>
-                [ Founders ]
+                [ Co-Founder & Managing Director ]
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
