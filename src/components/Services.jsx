@@ -1,10 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useMediaQuery } from '../hooks/useResponsive'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const rows = [
   {
@@ -49,10 +45,10 @@ function ArrowBtn({ dir, onClick, disabled }) {
       data-hover
       aria-label={dir < 0 ? 'Previous service' : 'Next service'}
       style={{
-        width: 32, height: 32,
+        width: 44, height: 44,
         border: `1px solid ${disabled ? 'var(--rule)' : 'var(--rule2)'}`,
         color: disabled ? 'var(--faint)' : 'var(--dim)',
-        fontFamily: 'var(--font-display)', fontSize: '1.1rem', lineHeight: 1,
+        fontFamily: 'var(--font-display)', fontSize: '1rem', lineHeight: 1,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         cursor: disabled ? 'default' : 'pointer',
         transition: 'border-color 0.2s, color 0.2s, background 0.2s',
@@ -61,7 +57,7 @@ function ArrowBtn({ dir, onClick, disabled }) {
       onMouseEnter={e => { if (!disabled) { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' } }}
       onMouseLeave={e => { e.currentTarget.style.borderColor = disabled ? 'var(--rule)' : 'var(--rule2)'; e.currentTarget.style.color = disabled ? 'var(--faint)' : 'var(--dim)' }}
     >
-      {dir < 0 ? '←' : '→'}
+      {dir < 0 ? '<' : '>'}
     </button>
   )
 }
@@ -78,17 +74,17 @@ function ServicePanel({ item, isMobile }) {
   return (
     <motion.div
       key={item.id}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: isMobile ? 0 : 20 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -14 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      exit={{ opacity: 0, y: isMobile ? 0 : -14 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        height: '100%',
+        position: 'absolute',
+        inset: 0,
         display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
         background: 'var(--bg2)',
-        position: 'relative',
-        overflow: 'hidden',
+        overflow: isMobile ? 'auto' : 'hidden',
       }}
     >
       {/* Corner brackets */}
@@ -115,16 +111,7 @@ function ServicePanel({ item, isMobile }) {
             <div style={{
               width: '100%', height: '100%',
               background: 'linear-gradient(135deg, var(--bg), var(--rule))',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <span style={{
-                fontFamily: 'var(--font-display)', fontWeight: 700,
-                fontSize: '4rem', color: 'var(--accent)', opacity: 0.15,
-                textTransform: 'uppercase', letterSpacing: '0.06em',
-              }}>
-                {item.id}
-              </span>
-            </div>
+            }} />
           )}
           <div style={{
             position: 'absolute', inset: 0,
@@ -144,25 +131,7 @@ function ServicePanel({ item, isMobile }) {
         padding: isMobile ? '2rem 1.5rem' : 'clamp(3rem, 4.5vw, 5.5rem) clamp(2.5rem, 4vw, 5rem)',
         position: 'relative', zIndex: 1,
       }}>
-        {!isMobile && (
-          <div style={{
-            position: 'absolute', right: '-0.04em', bottom: '-0.1em',
-            fontFamily: 'var(--font-display)', fontWeight: 700,
-            fontSize: 'clamp(8rem, 15vw, 19rem)', lineHeight: 0.8,
-            color: 'rgba(29,60,102,0.05)', pointerEvents: 'none', userSelect: 'none',
-          }}>
-            {item.id}
-          </div>
-        )}
-
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{
-            fontFamily: 'var(--font-mono)', fontSize: isMobile ? '0.7rem' : '0.55rem',
-            letterSpacing: '0.18em', color: 'var(--muted)', marginBottom: isMobile ? '1.2rem' : '2.5rem',
-          }}>
-            [ SVC.{item.id} ]
-          </div>
-
           <motion.h2
             initial={{ clipPath: 'inset(0 0 100% 0)', y: '8%' }}
             animate={{ clipPath: 'inset(0 0 0% 0)', y: '0%' }}
@@ -222,70 +191,15 @@ function ServicePanel({ item, isMobile }) {
 }
 
 export default function Services() {
-  const sectionRef = useRef(null)
-  const stRef = useRef(null)
-  const lastIdx = useRef(0)
   const [activeIdx, setActiveIdx] = useState(0)
   const n = rows.length
   const isMobile = useMediaQuery('(max-width: 768px)')
 
-  useEffect(() => {
-    // On mobile, use arrow-only navigation — skip scroll pinning to avoid jittery snapping
-    if (isMobile) return
-    const section = sectionRef.current
-    if (!section) return
-
-    const ctx = gsap.context(() => {
-      stRef.current = ScrollTrigger.create({
-        trigger: section,
-        start: 'top top',
-        end: () => `+=${window.innerHeight * (n - 1)}`,
-        pin: true,
-        scrub: 0.5,
-        invalidateOnRefresh: true,
-        snap: {
-          snapTo: Array.from({ length: n }, (_, i) => i / (n - 1)),
-          duration: { min: 0.2, max: 0.5 },
-          delay: 0.04,
-          ease: 'power2.inOut',
-        },
-        onUpdate(self) {
-          const idx = Math.min(Math.round(self.progress * (n - 1)), n - 1)
-          if (idx !== lastIdx.current) {
-            lastIdx.current = idx
-            setActiveIdx(idx)
-          }
-        },
-      })
-    }, section)
-
-    const t1 = setTimeout(() => ScrollTrigger.refresh(), 250)
-    const onLoad = () => ScrollTrigger.refresh()
-    window.addEventListener('load', onLoad)
-
-    return () => {
-      clearTimeout(t1)
-      window.removeEventListener('load', onLoad)
-      ctx.revert()
-      stRef.current = null
-    }
-  }, [n, isMobile])
-
-  const goTo = (i) => {
-    const idx = Math.max(0, Math.min(n - 1, i))
-    lastIdx.current = idx
-    setActiveIdx(idx)
-    const st = stRef.current
-    if (st) {
-      const y = st.start + (idx / (n - 1)) * (st.end - st.start)
-      window.scrollTo({ top: y, behavior: 'smooth' })
-    }
-  }
+  const goTo = (i) => setActiveIdx(Math.max(0, Math.min(n - 1, i)))
 
   return (
     <section
       id="services"
-      ref={sectionRef}
       style={{
         width: '100vw',
         height: '100svh',
@@ -312,40 +226,19 @@ export default function Services() {
       }}>
         <span>[ 02 - SERVICES ]</span>
 
-        {/* Progress dots */}
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          {rows.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              style={{
-                width: i === activeIdx ? 20 : 6,
-                height: 1,
-                background: i === activeIdx ? 'var(--white)' : 'var(--muted)',
-                transition: 'width 0.35s, background 0.35s',
-                cursor: 'pointer',
-                border: 'none',
-                padding: 0,
-              }}
-            />
-          ))}
-        </div>
-
         {/* Arrow navigation */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
           <ArrowBtn dir={-1} onClick={() => goTo(activeIdx - 1)} disabled={activeIdx === 0} />
-          {!isMobile && (
-            <span style={{ minWidth: '3.5rem', textAlign: 'center' }}>
-              {String(activeIdx + 1).padStart(2, '0')} / {rows.length}
-            </span>
-          )}
+          <span style={{ minWidth: '3.5rem', textAlign: 'center' }}>
+            {String(activeIdx + 1).padStart(2, '0')} / {rows.length}
+          </span>
           <ArrowBtn dir={1} onClick={() => goTo(activeIdx + 1)} disabled={activeIdx === n - 1} />
         </div>
       </div>
 
       {/* Body */}
-      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-        <AnimatePresence mode="wait">
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden', minHeight: 0 }}>
+        <AnimatePresence mode="sync">
           <ServicePanel key={activeIdx} item={rows[activeIdx]} isMobile={isMobile} />
         </AnimatePresence>
       </div>
