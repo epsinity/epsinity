@@ -41,88 +41,28 @@ const rows = [
   },
 ]
 
-// Dial geometry — mirrors the Solutions dial
-const DIAL_W = 210, DIAL_H = 158
-const PIVOT = { x: 188, y: 18 }
-const RADIUS = 150
-const SPAN = [110, 178]
-const dotAngle = (i, n) => SPAN[0] + (SPAN[1] - SPAN[0]) * (i / (n - 1))
-const polar = (deg, r = RADIUS) => {
-  const rad = (deg * Math.PI) / 180
-  return { x: PIVOT.x + r * Math.cos(rad), y: PIVOT.y + r * Math.sin(rad) }
-}
-
-function Dial({ items, activeIdx, setActiveIdx }) {
-  const active = items[activeIdx]
-  const n = items.length
-  const a0 = polar(SPAN[0]), a1 = polar(SPAN[1])
-
+function ArrowBtn({ dir, onClick, disabled }) {
   return (
-    <div style={{ position: 'absolute', top: '1.4rem', right: '1.4rem', width: DIAL_W, height: DIAL_H, zIndex: 12 }}>
-      <svg viewBox={`0 0 ${DIAL_W} ${DIAL_H}`} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible' }}>
-        <path d={`M ${a0.x} ${a0.y} A ${RADIUS} ${RADIUS} 0 0 1 ${a1.x} ${a1.y}`}
-          fill="none" stroke="var(--rule2)" strokeWidth="1" />
-        {Array.from({ length: 22 }, (_, i) => {
-          const deg = SPAN[0] + ((SPAN[1] - SPAN[0]) / 21) * i
-          const big = i % 7 === 0
-          const p1 = polar(deg, RADIUS - 2)
-          const p2 = polar(deg, RADIUS + (big ? 7 : 3))
-          return <line key={i} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y}
-            stroke={big ? 'var(--muted)' : 'var(--rule2)'} strokeWidth={big ? 0.9 : 0.5} />
-        })}
-        <circle cx={PIVOT.x} cy={PIVOT.y} r="3" fill="var(--accent)" />
-        <circle cx={PIVOT.x} cy={PIVOT.y} r="7" fill="none" stroke="var(--rule2)" strokeWidth="0.6" />
-      </svg>
-
-      <motion.div
-        animate={{ rotate: dotAngle(activeIdx, n) }}
-        transition={{ type: 'spring', stiffness: 70, damping: 13 }}
-        style={{
-          position: 'absolute', left: PIVOT.x, top: PIVOT.y,
-          width: RADIUS - 12, height: 2, transformOrigin: 'left center',
-          background: 'linear-gradient(to right, var(--accent), rgba(205,221,244,0.06))',
-        }}
-      />
-
-      <div style={{ position: 'absolute', right: 2, bottom: 0, textAlign: 'right', pointerEvents: 'none' }}>
-        <AnimatePresence mode="wait">
-          <motion.div key={active.id}
-            initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.28 }}
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.4rem', color: 'var(--white)', letterSpacing: '0.03em', lineHeight: 1 }}
-          >
-            {active.id}
-          </motion.div>
-        </AnimatePresence>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.46rem', letterSpacing: '0.16em', color: 'var(--muted)', marginTop: 3 }}>
-          {String(activeIdx + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}
-        </div>
-      </div>
-
-      {items.map((item, i) => {
-        const isActive = i === activeIdx
-        const d = polar(dotAngle(i, n))
-        return (
-          <button key={item.id} onClick={() => setActiveIdx(i)} title={item.title}
-            style={{
-              position: 'absolute', left: d.x, top: d.y, transform: 'translate(-50%, -50%)',
-              background: 'none', border: 'none', cursor: 'pointer', zIndex: 5, padding: 6, lineHeight: 0,
-            }}
-          >
-            <motion.span
-              animate={{ scale: isActive ? 1.5 : 1 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 18 }}
-              style={{
-                width: 8, height: 8, borderRadius: '50%', display: 'block',
-                background: isActive ? 'var(--accent)' : 'var(--bg)',
-                border: `1px solid ${isActive ? 'var(--accent)' : 'var(--muted)'}`,
-                boxShadow: isActive ? '0 0 12px rgba(205,221,244,0.5)' : 'none',
-              }}
-            />
-          </button>
-        )
-      })}
-    </div>
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      data-hover
+      aria-label={dir < 0 ? 'Previous service' : 'Next service'}
+      style={{
+        width: 32, height: 32,
+        border: `1px solid ${disabled ? 'var(--rule)' : 'var(--rule2)'}`,
+        color: disabled ? 'var(--faint)' : 'var(--dim)',
+        fontFamily: 'var(--font-display)', fontSize: '1.1rem', lineHeight: 1,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        cursor: disabled ? 'default' : 'pointer',
+        transition: 'border-color 0.2s, color 0.2s, background 0.2s',
+        background: 'transparent',
+      }}
+      onMouseEnter={e => { if (!disabled) { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' } }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = disabled ? 'var(--rule)' : 'var(--rule2)'; e.currentTarget.style.color = disabled ? 'var(--faint)' : 'var(--dim)' }}
+    >
+      {dir < 0 ? '←' : '→'}
+    </button>
   )
 }
 
@@ -199,11 +139,11 @@ function ServicePanel({ item, isMobile }) {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: isMobile ? 'flex-start' : 'space-between',
+        gap: isMobile ? '2rem' : 0,
         padding: isMobile ? '2rem 1.5rem' : 'clamp(3rem, 4.5vw, 5.5rem) clamp(2.5rem, 4vw, 5rem)',
         position: 'relative', zIndex: 1,
       }}>
-        {/* Ghost watermark */}
         {!isMobile && (
           <div style={{
             position: 'absolute', right: '-0.04em', bottom: '-0.1em',
@@ -290,6 +230,8 @@ export default function Services() {
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   useEffect(() => {
+    // On mobile, use arrow-only navigation — skip scroll pinning to avoid jittery snapping
+    if (isMobile) return
     const section = sectionRef.current
     if (!section) return
 
@@ -325,15 +267,17 @@ export default function Services() {
       clearTimeout(t1)
       window.removeEventListener('load', onLoad)
       ctx.revert()
+      stRef.current = null
     }
-  }, [n])
+  }, [n, isMobile])
 
   const goTo = (i) => {
-    lastIdx.current = i
-    setActiveIdx(i)
+    const idx = Math.max(0, Math.min(n - 1, i))
+    lastIdx.current = idx
+    setActiveIdx(idx)
     const st = stRef.current
     if (st) {
-      const y = st.start + (i / (n - 1)) * (st.end - st.start)
+      const y = st.start + (idx / (n - 1)) * (st.end - st.start)
       window.scrollTo({ top: y, behavior: 'smooth' })
     }
   }
@@ -366,7 +310,9 @@ export default function Services() {
         background: 'var(--bg2)',
         flexShrink: 0,
       }}>
-        <span>WHAT WE OFFER</span>
+        <span>[ 02 - SERVICES ]</span>
+
+        {/* Progress dots */}
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
           {rows.map((_, i) => (
             <button
@@ -384,8 +330,17 @@ export default function Services() {
             />
           ))}
         </div>
-        {!isMobile && <span>SERVICES / {String(activeIdx + 1).padStart(2, '0')} OF {rows.length}</span>}
-        {isMobile && <span>{String(activeIdx + 1).padStart(2, '0')} / {rows.length}</span>}
+
+        {/* Arrow navigation */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <ArrowBtn dir={-1} onClick={() => goTo(activeIdx - 1)} disabled={activeIdx === 0} />
+          {!isMobile && (
+            <span style={{ minWidth: '3.5rem', textAlign: 'center' }}>
+              {String(activeIdx + 1).padStart(2, '0')} / {rows.length}
+            </span>
+          )}
+          <ArrowBtn dir={1} onClick={() => goTo(activeIdx + 1)} disabled={activeIdx === n - 1} />
+        </div>
       </div>
 
       {/* Body */}
@@ -393,8 +348,6 @@ export default function Services() {
         <AnimatePresence mode="wait">
           <ServicePanel key={activeIdx} item={rows[activeIdx]} isMobile={isMobile} />
         </AnimatePresence>
-
-        {!isMobile && <Dial items={rows} activeIdx={activeIdx} setActiveIdx={goTo} />}
       </div>
     </section>
   )

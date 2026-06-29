@@ -1,6 +1,12 @@
 import { motion } from 'framer-motion'
 import { useMediaQuery } from '../hooks/useResponsive'
 
+const FOUNDER_BIO = [
+  'Has two decades of deep expertise in Computational Fluid Dynamics (CFD) and engineering simulation. M.Tech in Fluids & Thermal Engineering from IIT-Guwahati. Venkat built his career solving some of the most complex fluid dynamics challenges across industries and developed intelligent automations for CFD/CAE processes.',
+  'Before co-founding Epsinity, Venkat worked at ESI-Group (Now Keysight) for 17.5 years in the CFD team. As a freelancer he collaborated with machine learning teams to build AI-driven CFD models.',
+  'At Epsinity, Venkat channels this rare combination of simulation depth, automation expertise, and AI fluency into building smarter engineering solutions — where physics-based modeling meets the power of modern data science.',
+]
+
 export default function About() {
   const isMobile = useMediaQuery('(max-width: 768px)')
 
@@ -15,7 +21,7 @@ export default function About() {
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : '0.9fr 1.1fr',
           gap: isMobile ? '3rem' : '4.5rem',
-          alignItems: 'center',
+          alignItems: 'start',
         }}>
 
           {/* Left: text */}
@@ -45,14 +51,14 @@ export default function About() {
             </p>
           </motion.div>
 
-          {/* Right: founders panel styled like the original Legacy card */}
+          {/* Right: founders panel */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.35 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
             style={{
-              position: 'relative', minHeight: 400,
+              position: 'relative',
               border: '1px solid var(--rule)', background: 'var(--bg2)', overflow: 'hidden',
               padding: '2.5rem',
             }}
@@ -69,58 +75,111 @@ export default function About() {
               <div style={{
                 fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
                 letterSpacing: '0.16em', textTransform: 'uppercase',
-                color: 'var(--muted)', marginBottom: '2.5rem',
+                color: 'var(--muted)', marginBottom: '2rem',
               }}>
                 [ Co-Founder & Managing Director ]
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                {[
-                  { initial: 'E', name: 'Coming Soon', role: 'Co-Founder & CEO' },
-                  { initial: 'E', name: 'Coming Soon', role: 'Co-Founder & CTO' },
-                ].map((founder, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: 12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.35, delay: 0.45 + i * 0.1 }}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: '1.2rem',
-                      padding: '1.1rem 1.3rem',
-                      border: '1px solid var(--rule2)', background: 'var(--surface)',
-                    }}
-                  >
+              {/* ── Founder 1: Venkata Ramana Eaga ── */}
+              <motion.div
+                initial={{ opacity: 0, x: 12 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.35, delay: 0.45 }}
+              >
+                {/* Name + role card */}
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: '1.2rem',
+                  padding: '1.1rem 1.3rem',
+                  border: '1px solid var(--rule2)', background: 'var(--surface)',
+                }}>
+                  <div style={{
+                    width: 46, height: 46, borderRadius: '50%', flexShrink: 0,
+                    background: 'var(--bg)', border: '1px solid var(--rule2)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontFamily: 'var(--font-display)', fontWeight: 700,
+                    fontSize: '0.9rem', color: 'var(--accent)',
+                  }}>
+                    VR
+                  </div>
+                  <div>
                     <div style={{
-                      width: 46, height: 46, borderRadius: '50%', flexShrink: 0,
-                      background: 'var(--bg)', border: '1px solid var(--rule2)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontFamily: 'var(--font-display)', fontWeight: 700,
-                      fontSize: '1rem', color: 'var(--accent)',
+                      fontFamily: 'var(--font-display)', fontWeight: 600,
+                      fontSize: '1.05rem', color: 'var(--white)', marginBottom: '0.2rem',
                     }}>
-                      {founder.initial}
+                      Venkata Ramana Eaga
                     </div>
-                    <div>
-                      <div style={{
-                        fontFamily: 'var(--font-display)', fontWeight: 600,
-                        fontSize: '1.05rem', color: 'var(--white)', marginBottom: '0.2rem',
-                      }}>
-                        {founder.name}
-                      </div>
-                      <div style={{
-                        fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
-                        letterSpacing: '0.1em', color: 'var(--muted)', textTransform: 'uppercase',
-                      }}>
-                        {founder.role}
-                      </div>
+                    <div style={{
+                      fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
+                      letterSpacing: '0.1em', color: 'var(--muted)', textTransform: 'uppercase',
+                    }}>
+                      Co-Founder & Managing Director
                     </div>
-                  </motion.div>
-                ))}
-              </div>
+                  </div>
+                </div>
 
-              {/* corner labels like the Legacy section */}
+                {/* Bio paragraphs */}
+                <div style={{ marginTop: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+                  {FOUNDER_BIO.map((para, i) => (
+                    <motion.p
+                      key={i}
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: 0.55 + i * 0.1 }}
+                      style={{
+                        fontFamily: 'var(--font-mono)', fontSize: '0.72rem',
+                        lineHeight: 1.85, color: 'var(--dim)',
+                      }}
+                    >
+                      {para}
+                    </motion.p>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* divider */}
+              <div style={{ borderTop: '1px solid var(--rule)', margin: '2rem 0' }} />
+
+              {/* ── Founder 2: Coming Soon ── */}
+              <motion.div
+                initial={{ opacity: 0, x: 12 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.35, delay: 0.6 }}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '1.2rem',
+                  padding: '1.1rem 1.3rem',
+                  border: '1px solid var(--rule2)', background: 'var(--surface)',
+                }}
+              >
+                <div style={{
+                  width: 46, height: 46, borderRadius: '50%', flexShrink: 0,
+                  background: 'var(--bg)', border: '1px solid var(--rule2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontFamily: 'var(--font-display)', fontWeight: 700,
+                  fontSize: '1rem', color: 'var(--accent)',
+                }}>
+                  E
+                </div>
+                <div>
+                  <div style={{
+                    fontFamily: 'var(--font-display)', fontWeight: 600,
+                    fontSize: '1.05rem', color: 'var(--white)', marginBottom: '0.2rem',
+                  }}>
+                    Coming Soon
+                  </div>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
+                    letterSpacing: '0.1em', color: 'var(--muted)', textTransform: 'uppercase',
+                  }}>
+                    Co-Founder & CTO
+                  </div>
+                </div>
+              </motion.div>
+
               <div style={{
-                position: 'absolute', bottom: '-1.5rem', right: 0,
+                marginTop: '2rem',
                 fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
                 letterSpacing: '0.16em', textTransform: 'uppercase',
                 color: 'var(--accent)', textAlign: 'right',
